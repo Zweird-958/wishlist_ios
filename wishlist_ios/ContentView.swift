@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var email: String = ""
     @State private var password: String = ""
+    @State private var isLoading: Bool = false
 
     var body: some View {
         VStack {
@@ -22,6 +23,11 @@ struct ContentView: View {
                 PasswordField(text: $password, placeholder: "Password")
             }.padding()
             Button(action: {
+                if isLoading {
+                    return
+                }
+                
+                isLoading = true
                 let bodyData = ["email": email, "password": password]
                 let jsonData = try! JSONSerialization.data(withJSONObject: bodyData)
 
@@ -32,14 +38,21 @@ struct ContentView: View {
                     case let .failure(apiError):
                         print(apiError)
                     }
+                    isLoading = false
                 }
             }) {
-                Text("Sign In")
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 40)
-                    .padding(.vertical, 10)
-                    .background(Color.blue)
-                    .cornerRadius(8)
+                HStack(spacing: 8) {
+                    if isLoading {
+                        CircleLoader()
+                            .frame(width: 20, height: 20)
+                    }
+                    Text("Sign In")
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal, 40)
+                .padding(.vertical, 10)
+                .background(Color.blue)
+                .cornerRadius(8)
             }
         }
     }
