@@ -16,7 +16,7 @@ struct SignIn: View {
         NavigationStack {
             ZStack {
                 AlertPopUp(error: error, isAlertShown: $showError)
-                
+
                 VStack {
                     UserForm(action: {
                         email, password, isLoading in

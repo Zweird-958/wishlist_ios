@@ -10,3 +10,7 @@
 "login" = "Login!";
 "sign_up_title" = "Sign Up";
 "sign_up" = "Sign Up";
+"email_required" = "Email is required";
+"email_invalid" = "It must be an email";
+"password_len" = "Password must have 8 characters";
+"password_required" = "Password is required";

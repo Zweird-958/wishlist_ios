@@ -8,14 +8,11 @@
 import SwiftUI
 
 struct SignUp: View {
-    @State private var error: String = ""
-    @State private var showError: Bool = false
     @State private var valid: Bool = false
 
     var body: some View {
         NavigationStack {
             ZStack {
-                AlertPopUp(error: error, isAlertShown: $showError)
                 VStack {
                     UserForm(action: {
                         email, password, isLoading in
@@ -29,15 +26,7 @@ struct SignUp: View {
 
                         apiCall(method: .post, path: "sign-up", body: jsonData) { (result: ApiResponse<String>) in
 
-                            switch result {
-                            case .success(_):
-                                valid = true
-
-                            case let .failure(apiError):
-                                error = apiError
-                                showError.toggle()
-                                print(apiError)
-                            }
+                            valid = true
                             isLoading.wrappedValue = false
                         }
                     }, title: "sign_up_title", buttonTitle: "sign_up")
@@ -61,7 +50,6 @@ struct SignUp: View {
             }
         }
     }
-
 }
 
 struct SignUp_Previews: PreviewProvider {

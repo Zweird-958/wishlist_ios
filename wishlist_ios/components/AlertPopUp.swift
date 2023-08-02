@@ -10,11 +10,11 @@ import SwiftUI
 struct AlertPopUp: View {
     let error: String
     @Binding var isAlertShown: Bool
-    
+
     var body: some View {
         VStack {}
-                .alert(isPresented: $isAlertShown) {
-                    Alert(title: Text("error"), message: Text(error), dismissButton: .default(Text("ok")))
-                }
+            .alert(isPresented: $isAlertShown) {
+                Alert(title: Text("error"), message: Text(error), dismissButton: .default(Text("ok")))
+            }
     }
 }

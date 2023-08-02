@@ -10,3 +10,7 @@
 "login" = "Connectez-vous!";
 "sign_up_title" = "Inscription";
 "sign_up" = "S'inscrire";
+"email_required" = "Email est requis";
+"email_invalid" = "Veuillez mettre une email valide";
+"password_len" = "Votre mot de passe doit avoir minimum 8 caractères";
+"password_required" = "Mot de passe est requis";

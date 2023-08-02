@@ -11,6 +11,14 @@ struct LoaderButton: View {
     let title: String
     let action: () -> Void
     @Binding var isLoading: Bool
+    let color: Color
+      
+    init(title: String, action: @escaping () -> Void, isLoading: Binding<Bool>, color: Color = .blue) {
+        self._isLoading = isLoading
+        self.title = title
+        self.action = action
+        self.color = color
+    }
 
     var body: some View {
         Button(action: action) {
@@ -24,7 +32,7 @@ struct LoaderButton: View {
             .foregroundColor(.white)
             .padding(.horizontal, 40)
             .padding(.vertical, 10)
-            .background(Color.blue)
+            .background(color)
             .cornerRadius(8)
         }
     }
