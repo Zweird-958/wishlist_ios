@@ -12,9 +12,9 @@ struct LoaderButton: View {
     let action: () -> Void
     @Binding var isLoading: Bool
     let color: Color
-      
+
     init(title: String, action: @escaping () -> Void, isLoading: Binding<Bool>, color: Color = .blue) {
-        self._isLoading = isLoading
+        _isLoading = isLoading
         self.title = title
         self.action = action
         self.color = color
