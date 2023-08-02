@@ -27,7 +27,7 @@ enum Method: String {
     case delete = "DELETE"
 }
 
-func sendPostRequest<T: Decodable>(method: Method, path: String, body: Data?, completion: @escaping (ApiResponse<T>) -> Void) {
+func apiCall<T: Decodable>(method: Method, path: String, body: Data?, completion: @escaping (ApiResponse<T>) -> Void) {
     if let apiUrl = ProcessInfo.processInfo.environment["API_URL"] {
         guard let url = URL(string: "\(apiUrl)/\(path)") else {
             completion(.failure("Invalid URL"))

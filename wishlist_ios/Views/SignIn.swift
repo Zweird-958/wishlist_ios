@@ -38,7 +38,7 @@ struct SignIn: View {
                     let bodyData = ["email": email, "password": password]
                     let jsonData = try! JSONSerialization.data(withJSONObject: bodyData)
 
-                    sendPostRequest(method: .post, path: "sign-in", body: jsonData) { (result: ApiResponse<String>) in
+                    apiCall(method: .post, path: "sign-in", body: jsonData) { (result: ApiResponse<String>) in
                        
 
                         switch result {
