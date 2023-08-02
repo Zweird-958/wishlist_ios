@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct SignIn: View {
-    @State private var email: String = ""
-    @State private var password: String = ""
-    @State private var isLoading: Bool = false
     @State private var error: String = ""
     @State private var showError: Bool = false
     @State private var valid: Bool = false
@@ -18,23 +15,16 @@ struct SignIn: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                AlertPopUp(error: error, isAlertShown: $showError)
+                
                 VStack {
-                    VStack {
-                        Text("Sign In")
-                            .bold()
-                            .font(.system(.title, design: .monospaced))
-                            .foregroundColor(.blue)
-                        FormField(text: $email, placeholder: "Email")
-                        PasswordField(text: $password, placeholder: "Password")
-                    }
-                    .padding()
-
-                    Button(action: {
-                        if isLoading {
+                    UserForm(action: {
+                        email, password, isLoading in
+                        if isLoading.wrappedValue {
                             return
                         }
 
-                        isLoading = true
+                        isLoading.wrappedValue = true
                         let bodyData = ["email": email, "password": password]
                         let jsonData = try! JSONSerialization.data(withJSONObject: bodyData)
 
@@ -50,38 +40,22 @@ struct SignIn: View {
                                 showError.toggle()
                                 print(apiError)
                             }
-                            isLoading = false
+                            isLoading.wrappedValue = false
                         }
-                    }) {
-                        HStack(spacing: 8) {
-                            if isLoading {
-                                CircleLoader()
-                                    .frame(width: 20, height: 20).foregroundColor(.white)
-                            }
-                            Text("Sign In")
-                        }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 40)
-                        .padding(.vertical, 10)
-                        .background(Color.blue)
-                        .cornerRadius(8)
-                    }
+                    }, title: "sign_in_title", buttonTitle: "sign_in")
                 }
                 .navigationDestination(isPresented: $valid) {
                     Wishlist()
                 }
                 .navigationBarHidden(true)
-                .alert(isPresented: $showError) {
-                    Alert(title: Text("Error"), message: Text(error), dismissButton: .default(Text("Ok")))
-                }
 
                 VStack {
                     Spacer()
 
                     HStack {
-                        Text("Are you new ?")
+                        Text("new_account")
                         NavigationLink(destination: SignUp()) {
-                            Text("Register")
+                            Text("register")
                                 .foregroundColor(.blue)
                         }
                     }

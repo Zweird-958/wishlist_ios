@@ -23,8 +23,6 @@ struct Loading: View {
                             switch result {
                             case .success:
                                 isSuccess = true
-//                               TODO:
-//                                set wishlist
                             case .failure:
                                 isError = true
                             }
