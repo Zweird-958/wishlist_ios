@@ -24,7 +24,7 @@ struct SignUp: View {
                         let bodyData = ["email": email, "password": password]
                         let jsonData = try! JSONSerialization.data(withJSONObject: bodyData)
 
-                        apiCall(method: .post, path: "sign-up", body: jsonData) { (result: ApiResponse<String>) in
+                        apiCall(method: .post, path: "sign-up", body: jsonData) { (_: ApiResponse<String>) in
 
                             valid = true
                             isLoading.wrappedValue = false
