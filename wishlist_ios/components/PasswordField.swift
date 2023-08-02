@@ -11,17 +11,34 @@ struct PasswordField: View {
     @Binding var text: String
     let placeholder: String
     @Binding var error: String
+    @State private var isPasswordVisible: Bool = false
 
     var body: some View {
         VStack {
-            SecureField(placeholder, text: $text)
+            ZStack(alignment: .trailing) {
+                Group {
+                    if !isPasswordVisible {
+                        SecureField(placeholder, text: $text)
+                    } else {
+                        TextField(placeholder, text: $text)
+                    }
+                }
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(error.isEmpty ? .gray.opacity(0.1) : .red.opacity(0.5), lineWidth: 2)
                 )
                 .accentColor(error.isEmpty ? .blue : .red)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
                 .autocapitalization(.none)
+                .autocorrectionDisabled(true)
+                .textFieldStyle(.roundedBorder)
+                
+                Button(action: {
+                    isPasswordVisible.toggle()
+                }) {
+                    Image(systemName: !isPasswordVisible ? "eye.slash" : "eye")
+                        .accentColor(.gray)
+                }.padding(.trailing, 10)
+            }
 
             if !error.isEmpty {
                 Text(error).foregroundColor(.red).frame(maxWidth: .infinity, alignment: .leading)
