@@ -14,7 +14,6 @@ struct CircleLoader: View {
         Circle()
             .trim(from: 0.0, to: 0.7)
             .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
-            .foregroundColor(.white)
             .rotationEffect(Angle(degrees: isAnimating ? 360 : 0))
             .onAppear {
                 withAnimation(Animation.linear(duration: 1.5).repeatForever(autoreverses: false)) {

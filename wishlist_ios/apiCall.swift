@@ -34,8 +34,11 @@ func apiCall<T: Decodable>(method: Method, path: String, body: Data?, completion
             return
         }
 
+        let token = UserDefaults.standard.string(forKey: Config().keys.token)
+
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
+        request.setValue(token, forHTTPHeaderField: "authorization")
 
         if method == .post {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")

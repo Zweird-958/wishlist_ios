@@ -18,7 +18,6 @@ struct SignIn: View {
     var body: some View {
         NavigationStack {
             VStack {
-                
                 VStack {
                     Text("Sign In")
                         .bold()
@@ -39,7 +38,6 @@ struct SignIn: View {
                     let jsonData = try! JSONSerialization.data(withJSONObject: bodyData)
 
                     apiCall(method: .post, path: "sign-in", body: jsonData) { (result: ApiResponse<String>) in
-                       
 
                         switch result {
                         case let .success(apiResponse):
@@ -57,7 +55,7 @@ struct SignIn: View {
                     HStack(spacing: 8) {
                         if isLoading {
                             CircleLoader()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 20, height: 20).foregroundColor(.white)
                         }
                         Text("Sign In")
                     }
@@ -71,6 +69,7 @@ struct SignIn: View {
             .navigationDestination(isPresented: $valid) {
                 Wishlist()
             }
+            .navigationBarHidden(true)
             .alert(isPresented: $showError) {
                 Alert(title: Text("Error"), message: Text(error), dismissButton: .default(Text("Ok")))
             }
