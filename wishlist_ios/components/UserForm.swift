@@ -11,14 +11,14 @@ import SwiftUI
 class UserValidation: ObservableObject {
     @Published var emailError: String = ""
     @Published var passwordError: String = ""
-    
-    func formIsValid(email: String,password: String)-> Bool {
+
+    func formIsValid(email: String, password: String) -> Bool {
         let emailValidity = emailIsValid(email: email)
         let passwordValidity = passwordIsValid(password: password)
         return emailValidity && passwordValidity
     }
 
-    func emailIsValid(email: String)-> Bool {
+    func emailIsValid(email: String) -> Bool {
         emailError = ""
         if email.isEmpty {
             emailError = NSLocalizedString("email_required", comment: "Email Required Error")
@@ -32,11 +32,11 @@ class UserValidation: ObservableObject {
             emailError = NSLocalizedString("email_invalid", comment: "Email Invalid Format Error")
             return false
         }
-        
+
         return true
     }
 
-    func passwordIsValid(password: String)-> Bool {
+    func passwordIsValid(password: String) -> Bool {
         passwordError = ""
 
         if password.isEmpty {
@@ -48,7 +48,7 @@ class UserValidation: ObservableObject {
             passwordError = NSLocalizedString("password_len", comment: "Password len required")
             return false
         }
-        
+
         return true
     }
 }
@@ -79,7 +79,7 @@ struct UserForm: View {
                 if !userValidation.formIsValid(email: email, password: password) {
                     return
                 }
-                
+
                 action(email, password, $isLoading)
             }, isLoading: $isLoading)
         }
