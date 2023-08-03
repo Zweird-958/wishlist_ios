@@ -11,6 +11,20 @@ struct Wishlist: View {
     @State private var wishlist: [Wish] = []
     @State private var error: String = ""
     @State private var showError: Bool = false
+    
+    func fetchWishlist(){
+        apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
+
+            switch result {
+            case let .success(apiResult):
+                wishlist = apiResult
+
+            case let .failure(apiError):
+                error = apiError.message
+                showError = true
+            }
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -49,21 +63,14 @@ struct Wishlist: View {
                 }
                 .padding(.all, 5)
             }
+            .refreshable {
+                fetchWishlist()
+            }
         }
         .navigationBarBackButtonHidden(true)
         .navigationTitle("wishlist_title")
         .onAppear {
-            apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
-
-                switch result {
-                case let .success(apiResult):
-                    wishlist = apiResult
-
-                case let .failure(apiError):
-                    error = apiError.message
-                    showError = true
-                }
-            }
+            fetchWishlist()
         }
     }
 }
