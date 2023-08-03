@@ -36,7 +36,7 @@ struct SignIn: View {
                                 valid = true
 
                             case let .failure(apiError):
-                                error = apiError
+                                error = apiError.message
                                 showError.toggle()
                                 print(apiError)
                             }

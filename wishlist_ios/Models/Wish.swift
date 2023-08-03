@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Wish: Decodable {
+struct Wish: Decodable, Identifiable {
     let id: Int
     let name: String
-    let image: String
-    let link: String
+    let image: String?
+    let link: String?
     let price: Float
     let currency: String
     let userId: Int

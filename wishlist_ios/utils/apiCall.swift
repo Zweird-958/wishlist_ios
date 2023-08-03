@@ -11,13 +11,23 @@ struct ApiResult<T: Decodable>: Decodable {
     let result: T
 }
 
-struct ApiError: Decodable {
+struct ApiErrorResult: Decodable {
     let error: String
+}
+
+struct ApiError: Decodable {
+    let message: String
+    let status: Int?
+
+    init(message: String, status: Int? = nil) {
+        self.message = message
+        self.status = status
+    }
 }
 
 enum ApiResponse<T: Decodable>: Decodable {
     case success(T)
-    case failure(String)
+    case failure(ApiError)
 }
 
 enum Method: String {
@@ -30,11 +40,11 @@ enum Method: String {
 func apiCall<T: Decodable>(method: Method, path: String, body: Data?, completion: @escaping (ApiResponse<T>) -> Void) {
     if let apiUrl = ProcessInfo.processInfo.environment["API_URL"] {
         guard let url = URL(string: "\(apiUrl)/\(path)") else {
-            completion(.failure("Invalid URL"))
+            completion(.failure(ApiError(message: "Invalid URL")))
             return
         }
 
-        let token = UserDefaults.standard.string(forKey: Config().keys.token)
+        let token = UserDefaults.standard.string(forKey: Config().keys.token) ?? ""
 
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
@@ -47,12 +57,12 @@ func apiCall<T: Decodable>(method: Method, path: String, body: Data?, completion
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                completion(.failure(error.localizedDescription))
+                completion(.failure(ApiError(message: error.localizedDescription)))
                 return
             }
 
             guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure("Invalid HTTP Response"))
+                completion(.failure(ApiError(message: "Invalid HTTP Response")))
                 return
             }
 
@@ -64,21 +74,21 @@ func apiCall<T: Decodable>(method: Method, path: String, body: Data?, completion
                         let apiResult = try JSONDecoder().decode(ApiResult<T>.self, from: data)
                         completion(.success(apiResult.result))
                     } else {
-                        let apiError = try JSONDecoder().decode(ApiError.self, from: data)
-                        completion(.failure(apiError.error))
+                        let apiError = try JSONDecoder().decode(ApiErrorResult.self, from: data)
+                        completion(.failure(ApiError(message: apiError.error, status: statusCode)))
                     }
 
                 } catch {
-                    completion(.failure(error.localizedDescription))
+                    completion(.failure(ApiError(message: error.localizedDescription)))
                 }
             } else {
-                completion(.failure("No Data Receive"))
+                completion(.failure(ApiError(message: "No Data Receive")))
             }
         }
 
         task.resume()
 
     } else {
-        completion(.failure("No API URL"))
+        completion(.failure(ApiError(message: "No API URL")))
     }
 }

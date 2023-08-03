@@ -21,9 +21,10 @@ struct Loading: View {
                         apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
 
                             switch result {
-                            case .success:
+                            case let .success(apiResult):
                                 isSuccess = true
-                            case .failure:
+                            case let .failure(apiError):
+                                print(apiError.message)
                                 isError = true
                             }
                         }
