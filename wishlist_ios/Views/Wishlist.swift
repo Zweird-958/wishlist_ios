@@ -9,10 +9,10 @@ import SwiftUI
 
 struct Wishlist: View {
     @State private var wishlist: [Wish] = []
-    @State private var error: String = ""
+    @State private var error: ApiError = ApiError(message: "")
     @State private var showError: Bool = false
-    
-    func fetchWishlist(){
+
+    func fetchWishlist() {
         apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
 
             switch result {
@@ -20,7 +20,7 @@ struct Wishlist: View {
                 wishlist = apiResult
 
             case let .failure(apiError):
-                error = apiError.message
+                error = apiError
                 showError = true
             }
         }
@@ -28,7 +28,7 @@ struct Wishlist: View {
 
     var body: some View {
         NavigationStack {
-            AlertPopUp(error: error, isAlertShown: $showError)
+            HandleErrors(isAlertShow: $showError, error: $error)
             List(wishlist) { wish in
                 HStack {
                     WishImage(image: wish.image)
