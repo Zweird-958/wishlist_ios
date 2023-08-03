@@ -16,3 +16,13 @@
 "password_required" = "Password is required";
 "wishlist_title" = "My Wishlist";
 "buy" = "Buy";
+"add_wish_title" = "Add Wish";
+"add_wish" = "Add";
+"name" = "Name";
+"name_required" = "Name is required";
+"price" = "Price";
+"price_invalid" = "Price Invalid";
+"price_required" = "Price is required";
+"link" = "Link";
+"link_invalid" = "Link Invalid";
+"select_photo" = "Select an image";

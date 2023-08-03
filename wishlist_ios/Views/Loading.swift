@@ -19,23 +19,24 @@ struct Loading: View {
                     .frame(width: 50, height: 50).foregroundColor(.blue)
                     .onAppear {
                         let token = UserDefaults.standard.string(forKey: Config().keys.token)
-                        
-                        if token == nil{
+
+                        if token == nil {
                             isError = true
                             return
                         }
-                        
+
                         apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
 
                             switch result {
                             case .success:
-                                
+
                                 isSuccess = true
                             case .failure:
                                 isError = true
                             }
                         }
-                    }.navigationDestination(isPresented: $isSuccess) {
+                    }
+                    .navigationDestination(isPresented: $isSuccess) {
                         Wishlist()
                     }
                     .navigationDestination(isPresented: $isError) {

@@ -16,3 +16,13 @@
 "password_required" = "Mot de passe est requis";
 "wishlist_title" = "Ma Liste d'envie";
 "buy" = "Acheter";
+"add_wish_title" = "Ajouter un souhait";
+"add_wish" = "Ajouter";
+"name" = "Nom";
+"name_required" = "Nom est requis";
+"price" = "Prix";
+"price_invalid" = "Prix invalide";
+"price_required" = "Prix est requis";
+"link" = "Lien";
+"link_invalid" = "Lien invalide";
+"select_photo" = "Sélectionner une image";

@@ -37,7 +37,7 @@ enum Method: String {
     case delete = "DELETE"
 }
 
-func apiCall<T: Decodable>(method: Method, path: String, body: Data?, completion: @escaping (ApiResponse<T>) -> Void) {
+func apiCall<T: Decodable>(method: Method, path: String, body: Data?, boundary: String? = nil, completion: @escaping (ApiResponse<T>) -> Void) {
     if let apiUrl = ProcessInfo.processInfo.environment["API_URL"] {
         guard let url = URL(string: "\(apiUrl)/\(path)") else {
             completion(.failure(ApiError(message: "Invalid URL")))
@@ -51,8 +51,13 @@ func apiCall<T: Decodable>(method: Method, path: String, body: Data?, completion
         request.setValue(token, forHTTPHeaderField: "authorization")
 
         if method == .post {
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = body
+
+            if boundary != nil {
+                request.setValue("multipart/form-data; boundary=\(String(describing: boundary!))", forHTTPHeaderField: "Content-Type")
+            } else {
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            }
         }
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
