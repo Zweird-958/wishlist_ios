@@ -44,7 +44,7 @@ func apiCall<T: Decodable>(method: Method, path: String, body: Data?, completion
             return
         }
 
-        let token = UserDefaults.standard.string(forKey: Config().keys.token) ?? ""
+        let token = UserDefaults.standard.string(forKey: Config().keys.token)
 
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
