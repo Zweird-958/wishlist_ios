@@ -26,7 +26,8 @@ struct Wishlist: View {
                             .font(.subheadline)
                         if wish.link != nil {
                             RoundedButton(action: {
-                                print("button")
+                                guard let url = URL(string: wish.link!) else { return }
+                                UIApplication.shared.open(url)
                             }) {
                                 Text("buy")
                             }
