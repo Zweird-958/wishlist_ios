@@ -18,13 +18,20 @@ struct Loading: View {
                 CircleLoader()
                     .frame(width: 50, height: 50).foregroundColor(.blue)
                     .onAppear {
+                        let token = UserDefaults.standard.string(forKey: Config().keys.token)
+                        
+                        if token == nil{
+                            isError = true
+                            return
+                        }
+                        
                         apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
 
                             switch result {
-                            case let .success(apiResult):
+                            case .success:
+                                
                                 isSuccess = true
-                            case let .failure(apiError):
-                                print(apiError.message)
+                            case .failure:
                                 isError = true
                             }
                         }
