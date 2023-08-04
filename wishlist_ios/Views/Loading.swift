@@ -11,28 +11,27 @@ struct Loading: View {
     @Binding var path: NavigationPath
 
     var body: some View {
-        VStack {
-            CircleLoader()
-                .frame(width: 50, height: 50).foregroundColor(.blue)
-                .onAppear {
-                    let token = UserDefaults.standard.string(forKey: Config().keys.token)
+        CircleLoader()
+            .frame(width: 50, height: 50).foregroundColor(.blue)
+            .onAppear {
+                let token = UserDefaults.standard.string(forKey: Config().keys.token)
 
-                    if token == nil {
-                        path.append("signIn")
-                        return
-                    }
+                if token == nil {
+                    path.append("signIn")
+                    return
+                }
 
-                    apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success:
-                                path.append("wishlist")
-                            case .failure:
-                                path.append("signIn")
-                            }
+                apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success:
+                            path.append("wishlist")
+                        case .failure:
+                            path.append("signIn")
                         }
                     }
                 }
-        }
+            }
+            .toolbar(.hidden)
     }
 }
