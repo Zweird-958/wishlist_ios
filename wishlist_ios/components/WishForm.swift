@@ -19,10 +19,8 @@ struct WishForm: View {
     @State private var selectedCurrency: String = ""
     @State private var currencies: [String] = []
 
-    @State private var showError: Bool = false
-    @State private var error: ApiError = .init(message: "")
-
     @ObservedObject var wishValidation = WishValidation()
+    @ObservedObject var error: AlertError
 
     @State private var isLoading: Bool = false
     @State private var isSuccess: Bool = false
@@ -32,11 +30,12 @@ struct WishForm: View {
     let title: String
     let buttonTitle: String
 
-    init(wish: Wish? = nil, title: String, buttonTitle: String, action: @escaping (Data, String, Binding<Bool>) -> Void = { _, _, _ in }) {
+    init(wish: Wish? = nil, title: String, buttonTitle: String, error: AlertError, action: @escaping (Data, String, Binding<Bool>) -> Void = { _, _, _ in }) {
         self.action = action
         self.wish = wish
         self.title = title
         self.buttonTitle = buttonTitle
+        self.error = error
 
         if wish != nil {
             if let unwrappedStr = wish?.name {
@@ -133,8 +132,9 @@ struct WishForm: View {
                         selectedCurrency = wish?.currency ?? currencies[0]
 
                     case let .failure(apiError):
-                        error = apiError
-                        showError = true
+                        error.message = apiError.message
+                        error.status = apiError.status
+                        error.isShown = true
                     }
                 }
             }

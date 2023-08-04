@@ -15,7 +15,7 @@ struct AddWish: View {
     @State private var token: String = ""
 
     var body: some View {
-        WishForm(title: NSLocalizedString("add_wish_title", comment: "Add wish button"), buttonTitle: NSLocalizedString("add_wish", comment: "Add wish button"), action: { formData, boundary, isLoading in
+        WishForm(title: NSLocalizedString("add_wish_title", comment: "Add wish button"), buttonTitle: NSLocalizedString("add_wish", comment: "Add wish button"), error: error, action: { formData, boundary, isLoading in
             apiCall(method: .post, path: "wish", body: formData, boundary: boundary) { (result: ApiResponse<Wish>) in
                 DispatchQueue.main.async {
                     switch result {

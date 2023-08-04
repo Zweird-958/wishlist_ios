@@ -13,7 +13,7 @@ struct EditWish: View {
     @ObservedObject var error: AlertError
 
     var body: some View {
-        WishForm(wish: wish, title: NSLocalizedString("edit_wish_title", comment: "Edit wish button"), buttonTitle: NSLocalizedString("edit_wish", comment: "Edit wish button"), action: { formData, boundary, isLoading in
+        WishForm(wish: wish, title: NSLocalizedString("edit_wish_title", comment: "Edit wish button"), buttonTitle: NSLocalizedString("edit_wish", comment: "Edit wish button"), error: error, action: { formData, boundary, isLoading in
             apiCall(method: .patch, path: "wish/\(wish.id)", body: formData, boundary: boundary) { (result: ApiResponse<Wish>) in
                 DispatchQueue.main.async {
                     switch result {
