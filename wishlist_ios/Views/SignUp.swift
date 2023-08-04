@@ -8,52 +8,47 @@
 import SwiftUI
 
 struct SignUp: View {
-    @State private var valid: Bool = false
+    @Binding var path: NavigationPath
+    @ObservedObject var error: AlertError
+    @State private var redirectToSignIn: Bool = false
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                VStack {
-                    UserForm(action: {
-                        email, password, isLoading in
-                        if isLoading.wrappedValue {
-                            return
-                        }
+        ZStack {
+            VStack {
+                UserForm(action: {
+                    email, password, isLoading in
+                    if isLoading.wrappedValue {
+                        return
+                    }
 
-                        isLoading.wrappedValue = true
-                        let bodyData = ["email": email, "password": password]
-                        let jsonData = try! JSONSerialization.data(withJSONObject: bodyData)
+                    isLoading.wrappedValue = true
+                    let bodyData = ["email": email, "password": password]
+                    let jsonData = try! JSONSerialization.data(withJSONObject: bodyData)
 
-                        apiCall(method: .post, path: "sign-up", body: jsonData) { (_: ApiResponse<String>) in
-
-                            valid = true
+                    apiCall(method: .post, path: "sign-up", body: jsonData) { (_: ApiResponse<String>) in
+                        DispatchQueue.main.async {
+                            redirectToSignIn = true
                             isLoading.wrappedValue = false
                         }
-                    }, title: "sign_up_title", buttonTitle: "sign_up")
-                }
-                .navigationDestination(isPresented: $valid) {
-                    SignIn()
-                }
-                .navigationBarHidden(true)
+                    }
+                }, title: "sign_up_title", buttonTitle: "sign_up")
+            }
 
-                VStack {
-                    Spacer()
+            VStack {
+                Spacer()
 
-                    HStack {
-                        Text("already_register")
-                        NavigationLink(destination: SignIn()) {
-                            Text("login")
-                                .foregroundColor(.blue)
-                        }
+                HStack {
+                    Text("already_register")
+                    NavigationLink(destination: SignIn(path: $path, error: error)) {
+                        Text("login")
+                            .foregroundColor(.blue)
                     }
                 }
             }
         }
-    }
-}
-
-struct SignUp_Previews: PreviewProvider {
-    static var previews: some View {
-        SignUp()
+        .navigationBarHidden(true)
+        .navigationDestination(isPresented: $redirectToSignIn) {
+            SignIn(path: $path, error: error)
+        }
     }
 }

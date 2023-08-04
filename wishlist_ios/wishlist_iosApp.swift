@@ -11,7 +11,7 @@ import SwiftUI
 struct wishlist_iosApp: App {
     var body: some Scene {
         WindowGroup {
-            Loading()
+            Navigation()
         }
     }
 }

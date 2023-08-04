@@ -8,20 +8,16 @@
 import SwiftUI
 
 struct HandleErrors: View {
-    @Binding var isAlertShow: Bool
-    @Binding var error: ApiError
+    @ObservedObject var error: AlertError
     @State private var is403: Bool = false
 
+    @Binding var path: NavigationPath
+
     var body: some View {
-        NavigationStack {
-            AlertPopUp(error: error.message, isAlertShown: $isAlertShow, dismissAction: {
-                if (error.status) == 403 {
-                    is403 = true
-                }
-            })
-        }
-        .navigationDestination(isPresented: $is403) {
-            SignIn()
-        }
+        AlertPopUp(error: error.message, isAlertShown: $error.isShown, dismissAction: {
+            if error.status == 403 {
+                path = NavigationPath(["signIn"])
+            }
+        })
     }
 }

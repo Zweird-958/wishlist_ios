@@ -53,81 +53,80 @@ struct WishForm: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Form(title: title) {
-                FormField(text: $name, placeholder: NSLocalizedString("name", comment: "Name Placeholder"), error: $wishValidation.nameError)
-                    .onChange(of: name) { _ in
-                        wishValidation.nameIsValid(name: name)
-                    }
-                FormField(text: $price, placeholder: NSLocalizedString("price", comment: "Price Placeholder"), error: $wishValidation.priceError)
-                    .keyboardType(.decimalPad)
-                    .onChange(of: price) { _ in
-                        wishValidation.priceIsValid(price: price)
-                    }
-
-                FormField(text: $link, placeholder: NSLocalizedString("link", comment: "Link Placeholder"), error: $wishValidation.linkError)
-                    .onChange(of: link) { _ in
-                        wishValidation.linkIsValid(link: link)
-                    }
-
-                Picker("currency", selection: $selectedCurrency) {
-                    ForEach(currencies, id: \.self) { currency in
-                        Text(currency).tag(currency)
-                    }
+        Form(title: title) {
+            FormField(text: $name, placeholder: NSLocalizedString("name", comment: "Name Placeholder"), error: $wishValidation.nameError)
+                .onChange(of: name) { _ in
+                    wishValidation.nameIsValid(name: name)
+                }
+            FormField(text: $price, placeholder: NSLocalizedString("price", comment: "Price Placeholder"), error: $wishValidation.priceError)
+                .keyboardType(.decimalPad)
+                .onChange(of: price) { _ in
+                    wishValidation.priceIsValid(price: price)
                 }
 
-                PhotosPicker(
-                    selection: $selectedItem,
-                    matching: .images,
-                    photoLibrary: .shared()
-                ) {
-                    Text("select_photo")
+            FormField(text: $link, placeholder: NSLocalizedString("link", comment: "Link Placeholder"), error: $wishValidation.linkError)
+                .onChange(of: link) { _ in
+                    wishValidation.linkIsValid(link: link)
                 }
-                .onChange(of: selectedItem) { newItem in
-                    Task {
-                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                            selectedImageData = data
-                        }
+
+            Picker("currency", selection: $selectedCurrency) {
+                ForEach(currencies, id: \.self) { currency in
+                    Text(currency).tag(currency)
+                }
+            }
+
+            PhotosPicker(
+                selection: $selectedItem,
+                matching: .images,
+                photoLibrary: .shared()
+            ) {
+                Text("select_photo")
+            }
+            .onChange(of: selectedItem) { newItem in
+                Task {
+                    if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                        selectedImageData = data
                     }
                 }
+            }
 
-                if let selectedImageData,
-                   let uiImage = UIImage(data: selectedImageData)
-                {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 250, height: 250)
-                } else if wish?.image != nil {
-                    WishImage(image: wish?.image)
+            if let selectedImageData,
+               let uiImage = UIImage(data: selectedImageData)
+            {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 250, height: 250)
+            } else if wish?.image != nil {
+                WishImage(image: wish?.image)
+            }
+
+            LoaderButton(title: buttonTitle, action: {
+                if isLoading || !wishValidation.formIsValid(name: name, price: price, link: link) {
+                    return
                 }
 
-                LoaderButton(title: buttonTitle, action: {
-                    if isLoading || !wishValidation.formIsValid(name: name, price: price, link: link) {
-                        return
-                    }
+                isLoading = true
 
-                    isLoading = true
+                var parameters = [
+                    "name": name,
+                    "price": price,
+                    "currency": selectedCurrency,
+                    "link": link,
+                    "image": selectedImageData != nil ? UIImage(data: selectedImageData!) : wish?.image,
+                ] as [String: Any]
 
-                    var parameters = [
-                        "name": name,
-                        "price": price,
-                        "currency": selectedCurrency,
-                        "link": link,
-                        "image": selectedImageData != nil ? UIImage(data: selectedImageData!) : wish?.image,
-                    ] as [String: Any]
+                let boundary = "Boundary-\(UUID().uuidString)"
+                let formData = createFormData(parameters: parameters, boundary: boundary)
 
-                    let boundary = "Boundary-\(UUID().uuidString)"
-                    let formData = createFormData(parameters: parameters, boundary: boundary)
+                print(formData)
 
-                    print(formData)
+                action(formData, boundary, $isLoading)
+            }, isLoading: $isLoading)
 
-                    action(formData, boundary, $isLoading)
-                }, isLoading: $isLoading)
-
-            }.onAppear {
-                apiCall(method: .get, path: "currency", body: nil) { (result: ApiResponse<[String]>) in
-
+        }.onAppear {
+            apiCall(method: .get, path: "currency", body: nil) { (result: ApiResponse<[String]>) in
+                DispatchQueue.main.async {
                     switch result {
                     case let .success(apiResult):
                         currencies = apiResult

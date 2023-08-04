@@ -8,47 +8,31 @@
 import SwiftUI
 
 struct Loading: View {
-    @State private var isError = false
-    @State private var isSuccess = false
-    @State private var isAnimating = false
+    @Binding var path: NavigationPath
 
     var body: some View {
         VStack {
-            NavigationStack {
-                CircleLoader()
-                    .frame(width: 50, height: 50).foregroundColor(.blue)
-                    .onAppear {
-                        let token = UserDefaults.standard.string(forKey: Config().keys.token)
+            CircleLoader()
+                .frame(width: 50, height: 50).foregroundColor(.blue)
+                .onAppear {
+                    let token = UserDefaults.standard.string(forKey: Config().keys.token)
 
-                        if token == nil {
-                            isError = true
-                            return
-                        }
+                    if token == nil {
+                        path.append("signIn")
+                        return
+                    }
 
-                        apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
-
+                    apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
+                        DispatchQueue.main.async {
                             switch result {
                             case .success:
-
-                                isSuccess = true
+                                path.append("wishlist")
                             case .failure:
-                                isError = true
+                                path.append("signIn")
                             }
                         }
                     }
-                    .navigationDestination(isPresented: $isSuccess) {
-                        Wishlist()
-                    }
-                    .navigationDestination(isPresented: $isError) {
-                        SignIn()
-                    }
-            }
+                }
         }
-    }
-}
-
-struct Loading_Previews: PreviewProvider {
-    static var previews: some View {
-        Loading()
     }
 }

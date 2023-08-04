@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Wish: Decodable, Identifiable {
+struct Wish: Decodable, Identifiable, Hashable {
     let id: Int
     let name: String
     let image: String?
