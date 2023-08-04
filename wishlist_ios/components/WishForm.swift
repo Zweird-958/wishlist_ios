@@ -79,7 +79,7 @@ struct WishForm: View {
                 matching: .images,
                 photoLibrary: .shared()
             ) {
-                Text(wish?.image == nil && selectedImageData == nil ?  "select_photo" : "change_image")
+                Text(wish?.image == nil && selectedImageData == nil ? "select_photo" : "change_image")
             }
             .onChange(of: selectedItem) { newItem in
                 Task {
@@ -92,12 +92,28 @@ struct WishForm: View {
             if let selectedImageData,
                let uiImage = UIImage(data: selectedImageData)
             {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 250, height: 250)
+                ZStack {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .zIndex(2)
+                        .padding(.all, 10)
+                        .aspectRatio(contentMode: .fit)
+                        .edgesIgnoringSafeArea(.all)
+                        .clipped()
+
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .blur(radius: 10)
+                        .zIndex(1)
+                        .edgesIgnoringSafeArea(.all)
+                        .clipped()
+                }
+                .frame(width: 150,height: 150)
+                .padding(.all, 6)
+                .edgesIgnoringSafeArea(.all)
+
             } else if wish?.image != nil {
-                WishImage(image: wish?.image)
+                WishImage(image: wish?.image).frame(width: 150,height: 150)
             }
 
             LoaderButton(title: buttonTitle, action: {

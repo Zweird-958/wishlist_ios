@@ -15,10 +15,9 @@ struct WishCard: View {
 
     @State private var isAlertShown: Bool = false
     @State private var offset: CGFloat = 0
-    
+
     private let threshold: CGFloat = 100
     private let animationDuration = 0.3
-    
 
     var body: some View {
         ZStack {
@@ -41,7 +40,7 @@ struct WishCard: View {
                 .offset(x: offset)
 
             HStack {
-                WishImage(image: wish.image)
+                WishImage(image: wish.image).frame(width: 80,height: 80)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(wish.name)
@@ -104,30 +103,27 @@ struct WishCard: View {
                 message: Text("delete_confirmation"),
                 primaryButton: .default(Text("cancel")),
                 secondaryButton: .default(Text("ok"), action: {
-                        apiCall(method: .delete, path: "wish/\(wish.id)", body: nil){
-                            (result: ApiResponse<Wish>) in
-                            DispatchQueue.main.async {
-                                switch result {
-                                case let .success(apiResponse):
-                                    
-                                    
-                                    withAnimation(.easeInOut(duration: animationDuration)) {
-                                        offset = 0
-                                    }
-                                    
-                                    
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration) {
-                                        onSuccess(apiResponse)
-                                        
-                                    }
+                    apiCall(method: .delete, path: "wish/\(wish.id)", body: nil) {
+                        (result: ApiResponse<Wish>) in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case let .success(apiResponse):
 
-                                case let .failure(apiError):
-                                    error.message = apiError.message
-                                    error.status = apiError.status
-                                    error.isShown = true
+                                withAnimation(.easeInOut(duration: animationDuration)) {
+                                    offset = 0
                                 }
+
+                                DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration) {
+                                    onSuccess(apiResponse)
+                                }
+
+                            case let .failure(apiError):
+                                error.message = apiError.message
+                                error.status = apiError.status
+                                error.isShown = true
                             }
                         }
+                    }
                 })
             )
         }

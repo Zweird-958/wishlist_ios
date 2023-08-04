@@ -49,7 +49,6 @@ struct WishImage: View {
                     .blur(radius: 20)
             }
         }
-        .frame(width: 80, height: 80)
         .padding(.all, 6)
         .edgesIgnoringSafeArea(.all)
     }
