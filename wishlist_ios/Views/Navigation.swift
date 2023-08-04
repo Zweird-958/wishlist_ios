@@ -68,7 +68,7 @@ struct Navigation: View {
                                 }
                                 .tag(Tab.wishlist)
 
-                            Text("Profile Page")
+                            Profile(path: $path)
                                 .tabItem {
                                     Label(NSLocalizedString(Tab.profile.label,comment: "Profile label"), systemImage: Tab.profile.icon)
                                 }

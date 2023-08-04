@@ -9,10 +9,12 @@ import SwiftUI
 
 struct RoundedButton<Content: View>: View {
     let action: () -> Void
+    let verticalPadding: CGFloat
     let children: Content
 
-    init(action: @escaping () -> Void, @ViewBuilder children: () -> Content) {
+    init(action: @escaping () -> Void, verticalPadding: CGFloat = 3,@ViewBuilder children: () -> Content) {
         self.action = action
+        self.verticalPadding = verticalPadding
         self.children = children()
     }
 
@@ -23,7 +25,7 @@ struct RoundedButton<Content: View>: View {
 
         .foregroundColor(.white)
         .padding(.horizontal, 20)
-        .padding(.vertical, 3)
+        .padding(.vertical, verticalPadding)
         .background(.blue)
         .cornerRadius(8)
         .buttonStyle(PlainButtonStyle())
