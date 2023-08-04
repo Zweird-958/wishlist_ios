@@ -9,9 +9,7 @@ import SwiftUI
 
 struct Wishlist: View {
     @State private var wishlist: [Wish] = []
-
-    @State private var selectedWish: Wish? = nil
-    @State private var wishIsSelected: Bool = false
+    
 
     @Binding var path: NavigationPath
     @ObservedObject var error: AlertError
