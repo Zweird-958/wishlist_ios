@@ -9,9 +9,9 @@ import SwiftUI
 
 struct Profile: View {
     @Binding var path: NavigationPath
-    
+
     var body: some View {
-        List{
+        List {
             Button("change_language") {
                 if let url = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(url)

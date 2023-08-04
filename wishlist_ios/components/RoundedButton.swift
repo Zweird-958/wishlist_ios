@@ -12,7 +12,7 @@ struct RoundedButton<Content: View>: View {
     let verticalPadding: CGFloat
     let children: Content
 
-    init(action: @escaping () -> Void, verticalPadding: CGFloat = 3,@ViewBuilder children: () -> Content) {
+    init(action: @escaping () -> Void, verticalPadding: CGFloat = 3, @ViewBuilder children: () -> Content) {
         self.action = action
         self.verticalPadding = verticalPadding
         self.children = children()

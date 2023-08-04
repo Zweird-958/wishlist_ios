@@ -64,18 +64,18 @@ struct Navigation: View {
                         TabView(selection: $selectedTab) {
                             Wishlist(path: $path, error: alertError)
                                 .tabItem {
-                                    Label(NSLocalizedString(Tab.wishlist.label,comment: "Wishlist label"), systemImage: Tab.wishlist.icon)
+                                    Label(NSLocalizedString(Tab.wishlist.label, comment: "Wishlist label"), systemImage: Tab.wishlist.icon)
                                 }
                                 .tag(Tab.wishlist)
 
                             Profile(path: $path)
                                 .tabItem {
-                                    Label(NSLocalizedString(Tab.profile.label,comment: "Profile label"), systemImage: Tab.profile.icon)
+                                    Label(NSLocalizedString(Tab.profile.label, comment: "Profile label"), systemImage: Tab.profile.icon)
                                 }
                                 .tag(Tab.profile)
                         }
                         .navigationBarBackButtonHidden(true)
-                        .navigationTitle(NSLocalizedString(selectedTab.label,comment: "Selected Label"))
+                        .navigationTitle(NSLocalizedString(selectedTab.label, comment: "Selected Label"))
                     case "addWish":
                         AddWish(path: $path, error: alertError)
                     case "loading":
