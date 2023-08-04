@@ -11,11 +11,16 @@ struct Profile: View {
     @Binding var path: NavigationPath
     
     var body: some View {
-        RoundedButton(action: {
-            UserDefaults.standard.set(nil, forKey: Config().keys.token)
-            path = NavigationPath(["signIn"])
-        }, verticalPadding: 8){
-            Text("sign_out")
+        List{
+            Button("change_language") {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            }
+            Button("sign_out") {
+                UserDefaults.standard.set(nil, forKey: Config().keys.token)
+                path = NavigationPath(["signIn"])
+            }.foregroundColor(.red)
         }
     }
 }
