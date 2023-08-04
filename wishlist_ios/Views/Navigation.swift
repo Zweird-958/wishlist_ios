@@ -13,9 +13,41 @@ class AlertError: ObservableObject {
     @Published var status: Int?
 }
 
+struct TabItem {
+    let label: String
+    let icon: String
+}
+
 struct Navigation: View {
     @State private var path = NavigationPath(["loading"])
     @ObservedObject var alertError = AlertError()
+
+    @State private var selectedTab: Tab = .wishlist
+
+    enum Tab {
+        case wishlist
+        case profile
+
+        var label: String {
+            switch self {
+            case .wishlist:
+                return "wishlist_title"
+
+            case .profile:
+                return "profile"
+            }
+        }
+
+        var icon: String {
+            switch self {
+            case .wishlist:
+                return "heart.fill"
+
+            case .profile:
+                return "person.crop.circle"
+            }
+        }
+    }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -29,7 +61,21 @@ struct Navigation: View {
                     case "signIn":
                         SignIn(path: $path, error: alertError)
                     case "wishlist":
-                        Wishlist(path: $path, error: alertError)
+                        TabView(selection: $selectedTab) {
+                            Wishlist(path: $path, error: alertError)
+                                .tabItem {
+                                    Label(NSLocalizedString(Tab.wishlist.label,comment: "Wishlist label"), systemImage: Tab.wishlist.icon)
+                                }
+                                .tag(Tab.wishlist)
+
+                            Text("Profile Page")
+                                .tabItem {
+                                    Label(NSLocalizedString(Tab.profile.label,comment: "Profile label"), systemImage: Tab.profile.icon)
+                                }
+                                .tag(Tab.profile)
+                        }
+                        .navigationBarBackButtonHidden(true)
+                        .navigationTitle(NSLocalizedString(selectedTab.label,comment: "Selected Label"))
                     case "addWish":
                         AddWish(path: $path, error: alertError)
                     case "loading":

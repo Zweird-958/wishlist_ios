@@ -52,9 +52,6 @@ struct Wishlist: View {
                 fetchWishlist()
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .navigationTitle("wishlist_title")
-
         .onAppear {
             fetchWishlist()
         }
