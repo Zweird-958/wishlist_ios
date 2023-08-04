@@ -79,7 +79,7 @@ struct WishForm: View {
                 matching: .images,
                 photoLibrary: .shared()
             ) {
-                Text("select_photo")
+                Text(wish?.image == nil && selectedImageData == nil ?  "select_photo" : "change_image")
             }
             .onChange(of: selectedItem) { newItem in
                 Task {
