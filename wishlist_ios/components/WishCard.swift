@@ -49,16 +49,7 @@ struct WishCard: View {
                     Text(wish.priceFormatted)
                         .font(.subheadline)
 
-                    if wish.link != nil {
-                        RoundedButton(action: {
-                            guard let url = URL(string: wish.link!) else { return }
-                            UIApplication.shared.open(url)
-                        }) {
-                            Text("buy")
-                        }
-                    } else {
-                        Rectangle().opacity(0)
-                    }
+                    BuyButton(link: wish.link)
                 }
                 .frame(height: 80, alignment: .leading)
                 .padding(.horizontal)

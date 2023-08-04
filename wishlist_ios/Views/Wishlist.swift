@@ -9,8 +9,10 @@ import SwiftUI
 
 struct Wishlist: View {
     @State private var wishlist: [Wish] = []
+    @State private var isSheetPresented: Bool = false
+    @State private var selectedWish: Wish? = nil
+    @State private var isPressing: Bool = false
     
-
     @Binding var path: NavigationPath
     @ObservedObject var error: AlertError
 
@@ -35,6 +37,7 @@ struct Wishlist: View {
             FloatingButton(action: {
                 path.append("addWish")
             })
+            
 
             List {
                 ForEach(wishlist, id: \.id) { wish in
@@ -43,6 +46,11 @@ struct Wishlist: View {
                             wishFilter.id != wishDeleted.id
                         }
                     }, error: error)
+                    .onLongPressGesture(minimumDuration: 1,perform: {
+                        isSheetPresented = true
+                        selectedWish = wish
+                    }
+                    )
                 }
                 .listRowInsets(EdgeInsets())
             }
@@ -52,6 +60,16 @@ struct Wishlist: View {
         }
         .onAppear {
             fetchWishlist()
+        }
+        .sheet(isPresented: $isSheetPresented, onDismiss: {selectedWish = nil}) {
+            VStack{
+                Text(selectedWish?.name ?? "")
+                Text(selectedWish?.priceFormatted ?? "").padding(.all,4)
+                WishImage(image: selectedWish?.image).frame(height: 300)
+                BuyButton(link: selectedWish?.link)
+                
+            }
+            .presentationDetents([.medium, .large])
         }
     }
 }
