@@ -40,7 +40,7 @@ struct WishCard: View {
                 .offset(x: offset)
 
             HStack {
-                WishImage(image: wish.image).frame(width: 80,height: 80)
+                WishImage(image: wish.image).frame(width: 80, height: 80)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(wish.name)

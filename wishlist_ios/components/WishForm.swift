@@ -108,12 +108,12 @@ struct WishForm: View {
                         .edgesIgnoringSafeArea(.all)
                         .clipped()
                 }
-                .frame(width: 150,height: 150)
+                .frame(width: 150, height: 150)
                 .padding(.all, 6)
                 .edgesIgnoringSafeArea(.all)
 
             } else if wish?.image != nil {
-                WishImage(image: wish?.image).frame(width: 150,height: 150)
+                WishImage(image: wish?.image).frame(width: 150, height: 150)
             }
 
             LoaderButton(title: buttonTitle, action: {
