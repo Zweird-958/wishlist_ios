@@ -31,7 +31,7 @@ struct PasswordField: View {
                 .autocapitalization(.none)
                 .autocorrectionDisabled(true)
                 .textFieldStyle(.roundedBorder)
-                
+
                 Button(action: {
                     isPasswordVisible.toggle()
                 }) {
