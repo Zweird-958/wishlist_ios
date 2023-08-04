@@ -53,6 +53,7 @@ struct SignIn: View {
                     }
                 }
             }
-        }.navigationBarHidden(true)
+        }
+        .toolbar(.hidden)
     }
 }

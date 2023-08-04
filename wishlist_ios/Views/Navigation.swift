@@ -20,7 +20,7 @@ struct Navigation: View {
     var body: some View {
         NavigationStack(path: $path) {
             HandleErrors(error: alertError, path: $path)
-                .navigationBarHidden(true)
+                .toolbar(.hidden)
                 .navigationDestination(for: Wish.self) { wish in
                     EditWish(wish: wish, path: $path, error: alertError)
                 }
@@ -35,7 +35,7 @@ struct Navigation: View {
                     case "loading":
                         Loading(path: $path)
                     default:
-                        Text("error").navigationBarHidden(true)
+                        Text("error").toolbar(.hidden)
                     }
                 }
         }

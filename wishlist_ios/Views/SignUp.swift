@@ -46,7 +46,7 @@ struct SignUp: View {
                 }
             }
         }
-        .navigationBarHidden(true)
+        .toolbar(.hidden)
         .navigationDestination(isPresented: $redirectToSignIn) {
             SignIn(path: $path, error: error)
         }
