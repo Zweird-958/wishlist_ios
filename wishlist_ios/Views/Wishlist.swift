@@ -12,6 +12,8 @@ struct Wishlist: View {
     @State private var error: ApiError = .init(message: "")
     @State private var showError: Bool = false
     @State private var floatingButtonPressed: Bool = false
+    @State private var selectedWish: Wish? = nil
+    @State private var wishIsSelected: Bool = false
 
     func fetchWishlist() {
         apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
@@ -66,7 +68,8 @@ struct Wishlist: View {
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        print("clicked \(wish.id)")
+                        selectedWish = wish
+                        wishIsSelected = true
                     }
                     .padding(.all, 5)
                 }
@@ -79,6 +82,12 @@ struct Wishlist: View {
             .navigationDestination(isPresented: $floatingButtonPressed) {
                 AddWish()
             }
+            .navigationDestination(isPresented: $wishIsSelected) {
+                if selectedWish != nil {
+                    EditWish(wish: selectedWish!)
+                }
+            }
+
             .onAppear {
                 fetchWishlist()
             }

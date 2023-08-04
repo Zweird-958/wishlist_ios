@@ -50,7 +50,7 @@ func apiCall<T: Decodable>(method: Method, path: String, body: Data?, boundary: 
         request.httpMethod = method.rawValue
         request.setValue(token, forHTTPHeaderField: "authorization")
 
-        if method == .post {
+        if method == .post || method == .patch {
             request.httpBody = body
 
             if boundary != nil {

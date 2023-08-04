@@ -39,9 +39,16 @@ struct WishForm: View {
         self.buttonTitle = buttonTitle
 
         if wish != nil {
-            name = wish?.name ?? ""
-            price = String(describing: wish?.price)
-            link = wish?.link ?? ""
+            if let unwrappedStr = wish?.name {
+                name = unwrappedStr
+            }
+
+            if let unwrappedPrice = wish?.price {
+                _price = State(initialValue: String(describing: unwrappedPrice))
+            }
+
+            _name = State(initialValue: wish?.name ?? "")
+            _link = State(initialValue: wish?.link ?? "")
         }
     }
 
@@ -91,6 +98,8 @@ struct WishForm: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 250, height: 250)
+                } else if wish?.image != nil {
+                    WishImage(image: wish?.image)
                 }
 
                 LoaderButton(title: buttonTitle, action: {
@@ -105,11 +114,13 @@ struct WishForm: View {
                         "price": price,
                         "currency": selectedCurrency,
                         "link": link,
-                        "image": selectedImageData != nil ? UIImage(data: selectedImageData!) : nil,
+                        "image": selectedImageData != nil ? UIImage(data: selectedImageData!) : wish?.image,
                     ] as [String: Any]
 
                     let boundary = "Boundary-\(UUID().uuidString)"
                     let formData = createFormData(parameters: parameters, boundary: boundary)
+
+                    print(formData)
 
                     action(formData, boundary, $isLoading)
                 }, isLoading: $isLoading)
@@ -120,7 +131,7 @@ struct WishForm: View {
                     switch result {
                     case let .success(apiResult):
                         currencies = apiResult
-                        selectedCurrency = currencies[0]
+                        selectedCurrency = wish?.currency ?? currencies[0]
 
                     case let .failure(apiError):
                         error = apiError

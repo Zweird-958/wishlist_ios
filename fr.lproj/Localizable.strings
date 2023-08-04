@@ -26,3 +26,5 @@
 "link" = "Lien";
 "link_invalid" = "Lien invalide";
 "select_photo" = "Sélectionner une image";
+"edit_wish_title" = "Modifier un souhait";
+"edit_wish" = "Modifier";
