@@ -38,41 +38,15 @@ struct Wishlist: View {
                 path.append("addWish")
             })
 
-            List(wishlist) { wish in
-                HStack {
-                    WishImage(image: wish.image)
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(wish.name)
-                            .lineLimit(1)
-
-                        Text(wish.priceFormatted)
-                            .font(.subheadline)
-
-                        if wish.link != nil {
-                            RoundedButton(action: {
-                                guard let url = URL(string: wish.link!) else { return }
-                                UIApplication.shared.open(url)
-                            }) {
-                                Text("buy")
-                            }
-                        } else {
-                            Rectangle().opacity(0)
+            List {
+                ForEach(wishlist, id: \.id) { wish in
+                    WishCard(wish: wish, onTapGesture: { path.append(wish) }, onSuccess: { wishDeleted in
+                        wishlist = wishlist.filter { wishFilter in
+                            wishFilter.id != wishDeleted.id
                         }
-                    }
-                    .frame(height: 80, alignment: .leading)
-                    .padding(.horizontal)
-
-                    Spacer()
-
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(.blue)
+                    }, error: error)
                 }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    path.append(wish)
-                }
-                .padding(.all, 5)
+                .listRowInsets(EdgeInsets())
             }
             .refreshable {
                 fetchWishlist()

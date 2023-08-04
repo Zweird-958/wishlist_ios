@@ -28,3 +28,6 @@
 "select_photo" = "Select an image";
 "edit_wish_title" = "Edit Wish";
 "edit_wish" = "Edit";
+"cancel" = "Cancel";
+"delete" = "Delete";
+"delete_confirmation" = "Wish will be delete. Are you sure ?";

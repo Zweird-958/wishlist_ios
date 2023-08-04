@@ -28,3 +28,7 @@
 "select_photo" = "Sélectionner une image";
 "edit_wish_title" = "Modifier un souhait";
 "edit_wish" = "Modifier";
+"cancel" = "Annuler";
+"delete" = "Suppression";
+"delete_confirmation" = "Votre souhait va être supprimer. Êtes-vous sûr(e) ?";
+
