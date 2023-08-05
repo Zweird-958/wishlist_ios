@@ -12,6 +12,7 @@ struct Wishlist: View {
     @State private var isSheetPresented: Bool = false
     @State private var selectedWish: Wish? = nil
     @State private var isPressing: Bool = false
+    @State private var isLoading: Bool = true
 
     @Binding var path: NavigationPath
     @ObservedObject var error: AlertError
@@ -38,26 +39,31 @@ struct Wishlist: View {
                 path.append("addWish")
             })
 
-            List {
-                ForEach(wishlist, id: \.id) { wish in
-                    WishCard(wish: wish, onTapGesture: { path.append(wish) }, onSuccess: { wishDeleted in
-                        wishlist = wishlist.filter { wishFilter in
-                            wishFilter.id != wishDeleted.id
-                        }
-                    }, error: error)
-                        .onLongPressGesture(minimumDuration: 1, perform: {
-                            isSheetPresented = true
-                            selectedWish = wish
-                        })
+            if isLoading {
+                ProgressView()
+            } else {
+                List {
+                    ForEach(wishlist, id: \.id) { wish in
+                        WishCard(wish: wish, onTapGesture: { path.append(wish) }, onSuccess: { wishDeleted in
+                            wishlist = wishlist.filter { wishFilter in
+                                wishFilter.id != wishDeleted.id
+                            }
+                        }, error: error)
+                            .onLongPressGesture(minimumDuration: 1, perform: {
+                                isSheetPresented = true
+                                selectedWish = wish
+                            })
+                    }
+                    .listRowInsets(EdgeInsets())
                 }
-                .listRowInsets(EdgeInsets())
-            }
-            .refreshable {
-                fetchWishlist()
+                .refreshable {
+                    fetchWishlist()
+                }
             }
         }
         .onAppear {
             fetchWishlist()
+            isLoading = false
         }
         .sheet(isPresented: $isSheetPresented, onDismiss: { selectedWish = nil }) {
             VStack {
