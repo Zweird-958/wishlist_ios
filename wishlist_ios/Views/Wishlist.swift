@@ -9,7 +9,6 @@ import SwiftUI
 
 struct Wishlist: View {
     @State private var wishlist: [Wish] = []
-    @State private var isSheetPresented: Bool = false
     @State private var selectedWish: Wish? = nil
     @State private var isPressing: Bool = false
     @State private var isLoading: Bool = true
@@ -50,7 +49,6 @@ struct Wishlist: View {
                             }
                         }, error: error)
                             .onLongPressGesture(minimumDuration: 1, perform: {
-                                isSheetPresented = true
                                 selectedWish = wish
                             })
                     }
@@ -65,7 +63,7 @@ struct Wishlist: View {
             fetchWishlist()
             isLoading = false
         }
-        .sheet(isPresented: $isSheetPresented, onDismiss: { selectedWish = nil }) {
+        .sheet(item: $selectedWish, onDismiss: { selectedWish = nil }) { _ in
             VStack {
                 Text(selectedWish?.name ?? "")
                 Text(selectedWish?.priceFormatted ?? "").padding(.all, 4)
