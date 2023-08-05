@@ -45,3 +45,4 @@
 "ascending_price" = "Prix croissant";
 "descending_price" = "Prix décroissant";
 "options" = "Options";
+"wishlist_empty" = "Votre liste d'envie est vide !";

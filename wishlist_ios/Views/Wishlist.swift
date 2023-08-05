@@ -70,6 +70,8 @@ struct Wishlist: View {
 
             if isLoading {
                 ProgressView()
+            } else if wishlist.isEmpty {
+                Text("wishlist_empty")
             } else {
                 List {
                     Section("options") {
