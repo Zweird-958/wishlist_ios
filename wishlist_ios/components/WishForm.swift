@@ -117,7 +117,7 @@ struct WishForm: View {
             } else if wish?.image != nil {
                 WishImage(image: wish?.image).frame(width: 150, height: 150)
             }
-            
+
             if wish != nil {
                 Toggle("purchased", isOn: $isPurchased).padding(.horizontal, 20).toggleStyle(SwitchToggleStyle(tint: .blue))
             }
@@ -135,7 +135,7 @@ struct WishForm: View {
                     "currency": selectedCurrency,
                     "link": link,
                     "image": selectedImageData != nil ? UIImage(data: selectedImageData!) : wish?.image,
-                    "purchased": isPurchased
+                    "purchased": isPurchased,
                 ] as [String: Any]
 
                 let boundary = "Boundary-\(UUID().uuidString)"
