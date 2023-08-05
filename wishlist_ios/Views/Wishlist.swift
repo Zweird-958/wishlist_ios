@@ -8,6 +8,7 @@
 import SwiftUI
 
 let filters = ["all", "plural_purchased", "not_purchased"]
+let sorts = ["date", "ascending_price", "descending_price"]
 
 struct Wishlist: View {
     @State private var wishlist: [Wish] = []
@@ -16,10 +17,22 @@ struct Wishlist: View {
     @State private var isPressing: Bool = false
     @State private var isLoading: Bool = true
     @State private var selectedFilter: String = filters[0]
+    @State private var selectedSort: String = sorts[0]
 
     @Binding var path: NavigationPath
     @ObservedObject var error: AlertError
-    
+
+    func sortWishlist() {
+        switch selectedSort {
+        case sorts[1]:
+            wishlistFilter.sort { $0.price < $1.price }
+        case filters[2]:
+            wishlistFilter.sort { $0.price > $1.price }
+        default:
+            wishlistFilter.sort { $0.createdAt < $1.createdAt }
+        }
+    }
+
     func filterWishlist() {
         switch selectedFilter {
         case filters[1]:
@@ -38,6 +51,7 @@ struct Wishlist: View {
                 case let .success(apiResult):
                     wishlist = apiResult
                     filterWishlist()
+                    sortWishlist()
 
                 case let .failure(apiError):
                     error.message = apiError.message
@@ -47,8 +61,6 @@ struct Wishlist: View {
             }
         }
     }
-
-    
 
     var body: some View {
         ZStack {
@@ -60,25 +72,37 @@ struct Wishlist: View {
                 ProgressView()
             } else {
                 List {
-                    Picker("filter", selection: $selectedFilter) {
-                        ForEach(filters, id: \.self) { filter in
-                            Text(NSLocalizedString(filter, comment: "Filter"))
+                    Section("options") {
+                        Picker("sort", selection: $selectedSort) {
+                            ForEach(sorts, id: \.self) { sort in
+                                Text(NSLocalizedString(sort, comment: "Sort"))
+                            }
+                        }.onChange(of: selectedSort) { _ in
+                            sortWishlist()
                         }
-                    }.onChange(of: selectedFilter) { _ in
-                        filterWishlist()
+
+                        Picker("filter", selection: $selectedFilter) {
+                            ForEach(filters, id: \.self) { filter in
+                                Text(NSLocalizedString(filter, comment: "Filter"))
+                            }
+                        }.onChange(of: selectedFilter) { _ in
+                            filterWishlist()
+                        }
                     }
 
-                    ForEach(wishlistFilter, id: \.id) { wish in
-                        WishCard(wish: wish, onTapGesture: { path.append(wish) }, onSuccess: { wishDeleted in
-                            wishlist = wishlist.filter { wishFilter in
-                                wishFilter.id != wishDeleted.id
-                            }
-                        }, error: error)
-                            .onLongPressGesture(minimumDuration: 1, perform: {
-                                selectedWish = wish
-                            })
+                    Section {
+                        ForEach(wishlistFilter, id: \.id) { wish in
+                            WishCard(wish: wish, onTapGesture: { path.append(wish) }, onSuccess: { wishDeleted in
+                                wishlist = wishlist.filter { wishFilter in
+                                    wishFilter.id != wishDeleted.id
+                                }
+                            }, error: error)
+                                .onLongPressGesture(minimumDuration: 1, perform: {
+                                    selectedWish = wish
+                                })
+                        }
+                        .listRowInsets(EdgeInsets())
                     }
-                    .listRowInsets(EdgeInsets())
                 }
                 .refreshable {
                     fetchWishlist()

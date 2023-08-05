@@ -40,3 +40,8 @@
 "plural_purchased" = "Purchased";
 "not_purchased" = "Not Purchased";
 "filter" = "Filter";
+"sort" = "Sort";
+"date" = "Date";
+"ascending_price" = "Ascending Price";
+"descending_price" = "Descending Price";
+"options" = "Options";
