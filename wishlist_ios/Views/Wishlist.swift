@@ -63,12 +63,12 @@ struct Wishlist: View {
             fetchWishlist()
             isLoading = false
         }
-        .sheet(item: $selectedWish, onDismiss: { selectedWish = nil }) { _ in
+        .sheet(item: $selectedWish, onDismiss: { selectedWish = nil }) { wish in
             VStack {
-                Text(selectedWish?.name ?? "")
-                Text(selectedWish?.priceFormatted ?? "").padding(.all, 4)
-                WishImage(image: selectedWish?.image).frame(height: 300)
-                BuyButton(link: selectedWish?.link)
+                Text(wish.name)
+                Text(wish.priceFormatted).padding(.all, 4)
+                WishImage(image: wish.image).frame(height: 300)
+                BuyButton(link: wish.link)
             }
             .presentationDetents([.medium, .large])
         }
