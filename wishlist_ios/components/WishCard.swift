@@ -35,7 +35,7 @@ struct WishCard: View {
                 }
             }
             Rectangle()
-                .foregroundColor(.white)
+                .foregroundColor(.secondarySystemBackground)
                 .zIndex(2)
                 .offset(x: offset)
 
@@ -59,7 +59,6 @@ struct WishCard: View {
                 Image(systemName: "chevron.right")
                     .foregroundColor(.blue)
             }
-            .background(.white)
             .contentShape(Rectangle())
             .offset(x: offset)
             .gesture(
@@ -120,3 +119,4 @@ struct WishCard: View {
         }
     }
 }
+
