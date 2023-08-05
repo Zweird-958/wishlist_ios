@@ -19,6 +19,17 @@ struct Wishlist: View {
 
     @Binding var path: NavigationPath
     @ObservedObject var error: AlertError
+    
+    func filterWishlist() {
+        switch selectedFilter {
+        case filters[1]:
+            wishlistFilter = wishlist.filter { wish in wish.purchased }
+        case filters[2]:
+            wishlistFilter = wishlist.filter { wish in !wish.purchased }
+        default:
+            wishlistFilter = wishlist
+        }
+    }
 
     func fetchWishlist() {
         apiCall(method: .get, path: "wish", body: nil) { (result: ApiResponse<[Wish]>) in
@@ -37,16 +48,7 @@ struct Wishlist: View {
         }
     }
 
-    func filterWishlist() {
-        switch selectedFilter {
-        case filters[1]:
-            wishlistFilter = wishlist.filter { wish in wish.purchased }
-        case filters[2]:
-            wishlistFilter = wishlist.filter { wish in !wish.purchased }
-        default:
-            wishlistFilter = wishlist
-        }
-    }
+    
 
     var body: some View {
         ZStack {
