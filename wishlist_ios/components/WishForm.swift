@@ -18,6 +18,7 @@ struct WishForm: View {
 
     @State private var selectedCurrency: String = ""
     @State private var currencies: [String] = []
+    @State private var isPurchased: Bool = false
 
     @ObservedObject var wishValidation = WishValidation()
     @ObservedObject var error: AlertError
@@ -48,6 +49,7 @@ struct WishForm: View {
 
             _name = State(initialValue: wish?.name ?? "")
             _link = State(initialValue: wish?.link ?? "")
+            _isPurchased = State(initialValue: wish?.purchased ?? false)
         }
     }
 
@@ -115,6 +117,10 @@ struct WishForm: View {
             } else if wish?.image != nil {
                 WishImage(image: wish?.image).frame(width: 150, height: 150)
             }
+            
+            if wish != nil {
+                Toggle("purchased", isOn: $isPurchased).padding(.horizontal, 20).toggleStyle(SwitchToggleStyle(tint: .blue))
+            }
 
             LoaderButton(title: buttonTitle, action: {
                 if isLoading || !wishValidation.formIsValid(name: name, price: price, link: link) {
@@ -129,12 +135,11 @@ struct WishForm: View {
                     "currency": selectedCurrency,
                     "link": link,
                     "image": selectedImageData != nil ? UIImage(data: selectedImageData!) : wish?.image,
+                    "purchased": isPurchased
                 ] as [String: Any]
 
                 let boundary = "Boundary-\(UUID().uuidString)"
                 let formData = createFormData(parameters: parameters, boundary: boundary)
-
-                print(formData)
 
                 action(formData, boundary, $isLoading)
             }, isLoading: $isLoading)
