@@ -7,11 +7,15 @@
 
 import SwiftUI
 
+let filters = ["all", "plural_purchased", "not_purchased"]
+
 struct Wishlist: View {
     @State private var wishlist: [Wish] = []
+    @State private var wishlistFilter: [Wish] = []
     @State private var selectedWish: Wish? = nil
     @State private var isPressing: Bool = false
     @State private var isLoading: Bool = true
+    @State private var selectedFilter: String = filters[0]
 
     @Binding var path: NavigationPath
     @ObservedObject var error: AlertError
@@ -22,6 +26,7 @@ struct Wishlist: View {
                 switch result {
                 case let .success(apiResult):
                     wishlist = apiResult
+                    filterWishlist()
 
                 case let .failure(apiError):
                     error.message = apiError.message
@@ -29,6 +34,17 @@ struct Wishlist: View {
                     error.isShown = true
                 }
             }
+        }
+    }
+
+    func filterWishlist() {
+        switch selectedFilter {
+        case filters[1]:
+            wishlistFilter = wishlist.filter { wish in wish.purchased }
+        case filters[2]:
+            wishlistFilter = wishlist.filter { wish in !wish.purchased }
+        default:
+            wishlistFilter = wishlist
         }
     }
 
@@ -42,7 +58,15 @@ struct Wishlist: View {
                 ProgressView()
             } else {
                 List {
-                    ForEach(wishlist, id: \.id) { wish in
+                    Picker("filter", selection: $selectedFilter) {
+                        ForEach(filters, id: \.self) { filter in
+                            Text(NSLocalizedString(filter, comment: "Filter"))
+                        }
+                    }.onChange(of: selectedFilter) { _ in
+                        filterWishlist()
+                    }
+
+                    ForEach(wishlistFilter, id: \.id) { wish in
                         WishCard(wish: wish, onTapGesture: { path.append(wish) }, onSuccess: { wishDeleted in
                             wishlist = wishlist.filter { wishFilter in
                                 wishFilter.id != wishDeleted.id

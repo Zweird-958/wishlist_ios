@@ -36,3 +36,7 @@
 "sign_out" = "Sign Out";
 "change_language" = "Change Language";
 "purchased" = "Purchased";
+"all" = "All";
+"plural_purchased" = "Purchased";
+"not_purchased" = "Not Purchased";
+"filter" = "Filter";

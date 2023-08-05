@@ -36,3 +36,7 @@
 "sign_out" = "Se déconnecter";
 "change_language" = "Changer langue";
 "purchased" = "Acheté";
+"all" = "Tous";
+"plural_purchased" = "Achetés";
+"not_purchased" = "Non achetés";
+"filter" = "Filtre";
